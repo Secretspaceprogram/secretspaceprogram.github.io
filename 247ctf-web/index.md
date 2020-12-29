@@ -216,7 +216,7 @@ verbose = true
     url = "https://264e275e4c5212fb.247ctf.com/?to=2&from=1&amount=50"
    
 ```
-From here when we check the balance of both accounts to find that account number 2 has a balance of 250 which is more than the starting balance of both accounts combined. We have succeded in overwelming the server fast enough to trigger a couple simultanious transfers. We could now 'buy' the flag by calling:
+From here when we check the balance of both accounts to find that account number 2 has a balance of 250 which is more than the starting balance of both accounts combined. We have succeed in overwhelming the server fast enough to trigger a couple simultaneous transfers. We could now 'buy' the flag by calling:
 `/?flag&from=2`
 
 Success!
