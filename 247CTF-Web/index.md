@@ -62,7 +62,7 @@ This function is of a particular interest to us, on the second line we can see t
 
 We can easily exploit this by visiting `/flag` then viewing our cookies using the dev tools:
 
-![0.png](0.png)
+![images/0.png](0.png)
 
 Here we can see a session object with a value inside:
 
@@ -70,11 +70,11 @@ Here we can see a session object with a value inside:
 
 This looked to me like a base64 encoded string so we quickly decoded it to see:
 
-![1.png](1.png)
+![images/1.png](1.png)
 
 Decoded it is JWT with an object named flag, the value of this object seems to be base64 encoded again so we ran that encoded string back through the decoder:
 
-![2.png](2.png)
+![images/2.png](2.png)
 
 Success! We have found the flag.
 
@@ -82,11 +82,11 @@ Success! We have found the flag.
 
 This challenge was very simple but took a bit of fiddling around to get right. The description and name of the challenge make the vulnerability very evident here:
 
-![3.png](3.png)
+![images/3.png](3.png)
 
 So from those clues its pretty obvious the challenge is going to be around de-obfuscating client side authentication. Visiting the site we are greeted with a login screen:
 
-![4.png](4.png)
+![images/4.png](4.png)
 
 I viewed source so I could see what is being run after the form is submitted. Here I found a simple embedded script which has been obfuscated:
 
@@ -103,17 +103,17 @@ This script seems to be pretty simple apart from the obfuscated section; when th
 
 I spent a while looking at different types of JavaScript obfuscation until finally I came across JSFuck, and I knew as soon as I saw it that this is what our script was encoded in:
 
-![5.png](5.png)
+![images/5.png](5.png)
 
 I then tried to de-obfuscate the script using a number of de-obfuscation tools and all of them failed. I think this was due to the fact the tools I was using all try to run the code in which they are de-obfuscating and my code must be hitting a snag and crashing. 
 
 I found that I could look at the console and I would get the error message:
 
-![6.png](6.png)
+![images/6.png](6.png)
 
 this referenced `this.username` which I assumed was the username value it was trying to check and getting stuck on. Using Firefox I was able to view the entire source of the error, which also meant I could see the script de-obfuscated:
 
-![7.png](7.png)
+![images/7.png](7.png)
 
 ```python
 if (this.username.value == 'the_flag_is' && this.password.value == '247CTF{6c91b7f7f12c852f892293d16dba0148}'){ alert('Valid username and password!'); } else { alert('Invalid username and password!'); }
@@ -125,7 +125,7 @@ Success! The Flag is the password!
 
 This challenge appeared simple but for me was something new I hadn't seen before. At first I wasn't able to find the vulnerability but once I did all that required was a bit of creative scripting. This challenge focuses on comparisons in PHP and how they check data types when comparing.
 
-![8.png](8.png)
+![images/8.png](8.png)
 
 We were greeted by the source of the application. Here we can see that this page takes the password parameter via GET then adds the salt to the front then checks the output of this against the `password_hash` variable. If there is a match the flag will be rendered, otherwise the page displays the source of the application. Initially there wasn't much to go off here, until a friend suggested I look into comparison operators and PHP. 
 
@@ -135,7 +135,7 @@ Now that I had found the weak point I had to find a way to exploit this for my g
 
 In the post we find that the string `0e` will match true if it has a string of numbers after it, this is because the `e` stands for exponential in PHP and so any exponent of 0 will equal 0. Looking at the hash in the source we see that indeed it does fulfill this criteria:
 
-![9.png](9.png)
+![images/9.png](9.png)
 
 If we can also find a word that when hashed starts with `0e` and ends with any number of digits then we can pass this password to the app and it will compare true. Using python I was able to come up with a simple script that runs through a number of potential passwords, hashing them with the salt, trying to find a hash that starts with `0e` and ends with any number of digits. We iterated through all chars uppercase and lowercase, as well as 0 - 9.
 
@@ -163,7 +163,7 @@ for i in range(0,10):
         print(word)
 ```
 
-![10.png](10.png)
+![images/10.png](10.png)
 
 # Acid Flag Bank:
 
@@ -171,7 +171,7 @@ This challenge took me a while to understand before I realized what vulnerabilit
 
 We were greeted by the source of the application:
 
-![11.png](11.png)
+![images/11.png](11.png)
 
 Here we see we can view the balance of all accounts by visiting `/?dump`, and transfer using `/?to=2&from=1&amount=10`. The logic to transfer funds is pretty simple, an if statement checks a number of criteria:
 
