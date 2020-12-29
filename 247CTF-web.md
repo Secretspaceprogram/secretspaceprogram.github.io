@@ -1,3 +1,5 @@
+# 247CTF Challenges
+
 I spent my Christmas holiday time doing some of the web challenges from 247CTF. I decided to write this write up to document the methods used to solve each challenge. If its not apparent already: SPOILERS AHEAD.
 
 # Secured Session:
@@ -58,7 +60,7 @@ This function is of a particular interest to us, on the second line we can see t
 
 We can easily exploit this by visiting `/flag` then viewing our cookies using the dev tools:
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/35e42e9f-20e6-43ea-a2af-cec8ff323c29/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/35e42e9f-20e6-43ea-a2af-cec8ff323c29/Untitled.png)
+![247CTF%20Challenges%/0.png](247CTF%20Challenges%/Untitled.png)
 
 Here we can see a session object with a value inside:
 
@@ -66,11 +68,11 @@ Here we can see a session object with a value inside:
 
 This looked to me like a base64 encoded string so we quickly decoded it to see:
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c0c59f9d-7f38-4049-9d85-5a738fd59130/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c0c59f9d-7f38-4049-9d85-5a738fd59130/Untitled.png)
+![1.png](1.png)
 
 Decoded it is JWT with an object named flag, the value of this object seems to be base64 encoded again so we ran that encoded string back through the decoder:
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0bc0b7c6-769e-453b-ba3d-1ac0a618d491/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0bc0b7c6-769e-453b-ba3d-1ac0a618d491/Untitled.png)
+![2.png](2.png)
 
 Success! We have found the flag.
 
@@ -78,11 +80,11 @@ Success! We have found the flag.
 
 This challenge was very simple but took a bit of fiddling around to get right. The description and name of the challenge make the vulnerability very evident here:
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/406d6407-902f-41a9-82c9-d57d03ce53c5/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/406d6407-902f-41a9-82c9-d57d03ce53c5/Untitled.png)
+![3.png](3.png)
 
 So from those clues its pretty obvious the challenge is going to be around de-obfuscating client side authentication. Visiting the site we are greeted with a login screen:
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a600ffed-71a1-414c-bf9c-e00722320ef6/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a600ffed-71a1-414c-bf9c-e00722320ef6/Untitled.png)
+![247CTF%20Challenges%/Untitled%204.png](247CTF%20Challenges%/Untitled%204.png)
 
 I viewed source so I could see what is being run after the form is submitted. Here I found a simple embedded script which has been obfuscated:
 
@@ -99,17 +101,17 @@ This script seems to be pretty simple apart from the obfuscated section; when th
 
 I spent a while looking at different types of JavaScript obfuscation until finally I came across JSFuck, and I knew as soon as I saw it that this is what our script was encoded in:
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0b93e6b3-fe59-4c66-80f8-60a6324c911b/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0b93e6b3-fe59-4c66-80f8-60a6324c911b/Untitled.png)
+![247CTF%20Challenges%/Untitled%205.png](247CTF%20Challenges%/Untitled%205.png)
 
 I then tried to de-obfuscate the script using a number of de-obfuscation tools and all of them failed. I think this was due to the fact the tools I was using all try to run the code in which they are de-obfuscating and my code must be hitting a snag and crashing. 
 
 I found that I could look at the console and I would get the error message:
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/75493c5b-9001-403f-b462-1c236f339b09/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/75493c5b-9001-403f-b462-1c236f339b09/Untitled.png)
+![247CTF%20Challenges%/Untitled%206.png](247CTF%20Challenges%/Untitled%206.png)
 
 this referenced `this.username` which I assumed was the username value it was trying to check and getting stuck on. Using Firefox I was able to view the entire source of the error, which also meant I could see the script de-obfuscated:
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7df1c930-793c-447a-bee5-8acdfa800974/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7df1c930-793c-447a-bee5-8acdfa800974/Untitled.png)
+![247CTF%20Challenges%/Untitled%207.png](247CTF%20Challenges%/Untitled%207.png)
 
 ```python
 if (this.username.value == 'the_flag_is' && this.password.value == '247CTF{6c91b7f7f12c852f892293d16dba0148}'){ alert('Valid username and password!'); } else { alert('Invalid username and password!'); }
@@ -121,7 +123,7 @@ Success! The Flag is the password!
 
 This challenge appeared simple but for me was something new I hadn't seen before. At first I wasn't able to find the vulnerability but once I did all that required was a bit of creative scripting. This challenge focuses on comparisons in PHP and how they check data types when comparing.
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1c3e8677-cd13-4c7e-8c80-9bb56de3b0dd/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1c3e8677-cd13-4c7e-8c80-9bb56de3b0dd/Untitled.png)
+![247CTF%20Challenges%/Untitled%208.png](247CTF%20Challenges%/Untitled%208.png)
 
 We were greeted by the source of the application. Here we can see that this page takes the password parameter via GET then adds the salt to the front then checks the output of this against the `password_hash` variable. If there is a match the flag will be rendered, otherwise the page displays the source of the application. Initially there wasn't much to go off here, until a friend suggested I look into comparison operators and PHP. 
 
@@ -131,7 +133,7 @@ Now that I had found the weak point I had to find a way to exploit this for my g
 
 In the post we find that the string `0e` will match true if it has a string of numbers after it, this is because the `e` stands for exponential in PHP and so any exponent of 0 will equal 0. Looking at the hash in the source we see that indeed it does fulfill this criteria:
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/fc3b6e3a-38f7-4f78-a2b8-b31addae6b9c/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/fc3b6e3a-38f7-4f78-a2b8-b31addae6b9c/Untitled.png)
+![247CTF%20Challenges%/Untitled%209.png](247CTF%20Challenges%/Untitled%209.png)
 
 If we can also find a word that when hashed starts with `0e` and ends with any number of digits then we can pass this password to the app and it will compare true. Using python I was able to come up with a simple script that runs through a number of potential passwords, hashing them with the salt, trying to find a hash that starts with `0e` and ends with any number of digits. We iterated through all chars uppercase and lowercase, as well as 0 - 9.
 
@@ -159,7 +161,7 @@ for i in range(0,10):
         print(word)
 ```
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/aa93a768-0ab7-4d3a-81e6-f9d68537e28b/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/aa93a768-0ab7-4d3a-81e6-f9d68537e28b/Untitled.png)
+![247CTF%20Challenges%/Untitled%2010.png](247CTF%20Challenges%/Untitled%2010.png)
 
 # Acid Flag Bank:
 
