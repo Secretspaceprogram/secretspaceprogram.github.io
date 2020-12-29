@@ -1,4 +1,4 @@
-# 247CTF Web Challenges
+# 247CTF-Web
 
 ---
 
