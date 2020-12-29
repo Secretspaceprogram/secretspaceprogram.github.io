@@ -2,7 +2,7 @@
 
 ---
 
-I spent my Christmas holiday time doing some of the web challenges from 247CTF. I decided to write this write up to document the methods used to solve each challenge. If its not apparent already: SPOILERS AHEAD.
+I spent my Christmas holiday time checking out some of the web challenges from 247CTF. I decided to write this write up to document the methods used to solve a couple of the easier challenges. If its not apparent already: SPOILERS AHEAD.
 
 # Secured Session:
 
@@ -216,3 +216,7 @@ verbose = true
     url = "https://264e275e4c5212fb.247ctf.com/?to=2&from=1&amount=50"
    
 ```
+From here when we check the balance of both accounts to find that account number 2 has a balance of 250 which is more than the starting balance of both accounts combined. We have succeded in overwelming the server fast enough to trigger a couple simultanious transfers. We could now 'buy' the flag by calling:
+`/?flag&from=2`
+
+Success!
